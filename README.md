@@ -1,0 +1,3 @@
+# eris
+
+autonomous cognitive agent

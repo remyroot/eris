@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+data/
+*.db
+*.sqlite
+.DS_Store
+coverage/
+tmp/
