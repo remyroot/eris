@@ -1,16 +1,9 @@
 import { StateManager } from './state';
 import { Location, TickResult } from './types';
 import { createLogger } from './logger';
+import { randInt, pickRandom } from './utils';
 
 const log = createLogger('loop');
-
-function randInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function pickRandom<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 export class CoreLoop {
   private state: StateManager;
@@ -21,6 +14,10 @@ export class CoreLoop {
   constructor(state: StateManager, locations: Location[]) {
     this.state = state;
     this.locations = locations;
+
+    if (locations.length === 0) {
+      throw new Error('CoreLoop: no locations provided');
+    }
   }
 
   tick(): TickResult {
@@ -30,7 +27,6 @@ export class CoreLoop {
     let location = s.location;
     let moved = false;
 
-    // Move to a new location if stay duration expired or first tick
     if (!location || this.state.shouldMove()) {
       location = pickRandom(this.locations);
       const stay = randInt(location.stayRange[0], location.stayRange[1]);
@@ -38,7 +34,6 @@ export class CoreLoop {
       moved = true;
     }
 
-    // Generate activities
     const numActs = randInt(1, 2);
     const activities = this.state.advanceActivity(numActs);
 
@@ -50,30 +45,19 @@ export class CoreLoop {
       });
     }
 
-    return {
-      moved,
-      location,
-      activities,
-      duration: s.ticksAtLocation,
-    };
+    return { moved, location, activities, duration: s.ticksAtLocation };
   }
 
   start(intervalMs: number = 60_000): void {
     if (this.running) return;
     this.running = true;
-    log.info(`starting tick loop, interval=${intervalMs}ms`);
+    log.info(`tick loop started, interval=${intervalMs}ms`);
 
-    // Run first tick immediately
     this.tick();
 
     this.tickInterval = setInterval(() => {
       try {
-        const result = this.tick();
-        log.debug('tick', {
-          location: result.location.name,
-          moved: result.moved,
-          activities: result.activities.length,
-        });
+        this.tick();
       } catch (err) {
         log.error('tick failed', err);
       }
