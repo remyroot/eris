@@ -52,19 +52,32 @@ export class RedditPerception extends BasePerception {
   private async authenticate(): Promise<void> {
     if (this.accessToken && Date.now() < this.tokenExpiry) return;
 
+    if (!this.clientId || !this.clientSecret) {
+      throw new Error('reddit credentials not configured');
+    }
+
     const auth = Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64');
-    const res = await fetch('https://www.reddit.com/api/v1/access_token', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': this.userAgent,
-      },
-      body: 'grant_type=client_credentials',
-    });
+
+    let res: Response;
+    try {
+      res = await fetch('https://www.reddit.com/api/v1/access_token', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': this.userAgent,
+        },
+        body: 'grant_type=client_credentials',
+      });
+    } catch (err) {
+      this.log.error('reddit auth network error', err);
+      throw new Error('reddit auth failed: network error');
+    }
 
     if (!res.ok) {
-      throw new Error(`Reddit auth failed: ${res.status}`);
+      const body = await res.text().catch(() => '');
+      this.log.error(`reddit auth failed: ${res.status}`, { body });
+      throw new Error(`reddit auth failed: ${res.status}`);
     }
 
     const data = await res.json() as { access_token: string; expires_in: number };
@@ -105,9 +118,9 @@ export class RedditPerception extends BasePerception {
     }));
   }
 
-  async getComments(subreddit: string, postId: string): Promise<string[]> {
+  async getComments(subreddit: string, postId: string, limit: number = 100): Promise<string[]> {
     const data = await this.redditGet<RedditComment[]>(
-      `/r/${subreddit}/comments/${postId}?sort=top&limit=100`
+      `/r/${subreddit}/comments/${postId}?sort=top&limit=${limit}`
     );
 
     const comments: string[] = [];
