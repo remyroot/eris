@@ -6,3 +6,4 @@ export { GitHubPerception } from './github';
 export { YouTubePerception } from './youtube';
 export { BrowserPerception } from './browser';
 export { DiscordPerception } from './discord';
+export { TwitterPerception } from './twitter';
