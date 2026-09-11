@@ -71,3 +71,4 @@ export class ContextManager {
     }
   }
 }
+// v2: ensure system message is always preserved during context trim
