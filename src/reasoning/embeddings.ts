@@ -71,3 +71,4 @@ export class EmbeddingService {
     };
   }
 }
+// v2: batch embedding support
