@@ -1,6 +1,6 @@
 {
   "name": "eris",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "build": "tsc",
@@ -12,6 +12,9 @@
   "dependencies": {
     "better-sqlite3": "^11.0.0",
     "cheerio": "^1.0.0",
+    "chess.js": "^1.0.0",
+    "mineflayer": "^4.20.0",
+    "mineflayer-pathfinder": "^2.4.0",
     "openai": "^4.50.0",
     "playwright": "^1.45.0",
     "rss-parser": "^3.13.0",
