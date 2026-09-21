@@ -124,3 +124,4 @@ export class MinecraftClient {
     return this.connected;
   }
 }
+// v2: pathfinder error recovery
