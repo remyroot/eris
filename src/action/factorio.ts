@@ -124,3 +124,4 @@ export class FactorioClient {
     return this.authenticated;
   }
 }
+// v2: handle fragmented RCON packets
