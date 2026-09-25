@@ -86,3 +86,4 @@ export class LichessClient {
     return res.text();
   }
 }
+// v2: detailed move logging
