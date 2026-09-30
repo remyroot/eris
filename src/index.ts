@@ -1,6 +1,8 @@
 import { createLogger, setLogLevel } from './core/logger';
 import { StateManager } from './core/state';
 import { CoreLoop } from './core/loop';
+import { ObjectiveTracker } from './objectives/tracker';
+import { ObjectiveGenerator } from './objectives/generator';
 import { LOCATIONS } from '../config/locations';
 
 const log = createLogger('main');
@@ -14,9 +16,27 @@ async function main(): Promise<void> {
   log.info('eris starting');
 
   const state = new StateManager();
+  const objectives = new ObjectiveTracker();
+  const generator = new ObjectiveGenerator(objectives);
+
+  // Initialize default objectives
+  const defaults = generator.generateDefaults();
+  for (const obj of defaults) {
+    objectives.add(obj);
+  }
+
   const loop = new CoreLoop(state, LOCATIONS);
 
-  // Graceful shutdown
+  // Hook into tick to update objectives
+  const originalTick = loop.tick.bind(loop);
+  loop.tick = function() {
+    const result = originalTick();
+    if (result.location) {
+      objectives.tick(result.location.name);
+    }
+    return result;
+  };
+
   const shutdown = () => {
     log.info('shutting down');
     loop.stop();
