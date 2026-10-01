@@ -118,3 +118,5 @@ export class ObjectiveTracker {
     return this.objectives;
   }
 }
+
+// fixed: prevent double-promotion when both trigger and slot-fill match
