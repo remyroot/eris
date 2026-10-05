@@ -86,3 +86,4 @@ export class VectorStore {
     log.info(`loaded ${entries.length} vectors (${this.dimensions}d)`);
   }
 }
+// v2: replace on duplicate id
