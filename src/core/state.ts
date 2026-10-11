@@ -91,3 +91,4 @@ export class StateManager {
     };
   }
 }
+// Increase to 300 max feed entries for longer history
