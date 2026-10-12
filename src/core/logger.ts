@@ -13,7 +13,7 @@ export function setLogLevel(level: LogLevel): void {
   minLevel = level;
 }
 
-function pad(n: number, w: number = 2): string {
+function pad(n: number, w = 2): string {
   return String(n).padStart(w, '0');
 }
 
@@ -40,3 +40,4 @@ export function createLogger(module: string) {
     error: (msg: string, data?: unknown) => emit('error', module, msg, data),
   };
 }
+// exported for use in other modules
