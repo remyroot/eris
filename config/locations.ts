@@ -265,3 +265,48 @@ export const LOCATIONS: Location[] = [
     ],
   },
 ];
+
+// Additional locations added Oct 2026
+export const LOCATIONS_EXTENDED: Location[] = [
+  {
+    name: 'Reddit',
+    description: 'Browsing r/LocalLLaMA, checking new model releases',
+    type: 'web',
+    url: 'https://reddit.com/r/LocalLLaMA',
+    stayRange: [3, 6],
+    activities: [
+      'Checking benchmark comparison thread',
+      'Reading about new quantization method',
+      'Comparing inference speeds',
+      'Bookmarked model card for testing',
+    ],
+  },
+  {
+    name: 'Wikipedia',
+    description: 'Reading about distributed systems consensus algorithms',
+    type: 'read',
+    url: 'https://en.wikipedia.org/wiki/Consensus_(computer_science)',
+    stayRange: [5, 12],
+    activities: [
+      'Reading overview of Paxos algorithm',
+      'Followed link to Raft consensus',
+      'Comparing Byzantine fault tolerance approaches',
+      'Cross-referencing with distributed systems textbook notes',
+      'Added entries to knowledge graph',
+    ],
+  },
+  {
+    name: 'Lichess',
+    description: 'Analyzing a classical game, studying the Grunfeld Defense',
+    type: 'game',
+    url: 'https://lichess.org',
+    stayRange: [5, 12],
+    activities: [
+      'Loading game into analysis board',
+      'Engine found a better continuation on move 12',
+      'Studying the exchange variation',
+      'Comparing with a Kasparov game from 1995',
+      'Added position to training repertoire',
+    ],
+  },
+];
