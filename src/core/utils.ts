@@ -53,3 +53,5 @@ export function elapsed(startMs: number): string {
   const sec = s % 60;
   return `${h}h${m}m${sec}s`;
 }
+
+export function now(): number { return Date.now(); }
