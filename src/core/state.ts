@@ -92,3 +92,5 @@ export class StateManager {
   }
 }
 // Increase to 300 max feed entries for longer history
+
+// v2: batch feed operations for performance
