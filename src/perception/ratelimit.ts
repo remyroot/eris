@@ -4,7 +4,7 @@ const log = createLogger('ratelimit');
 
 interface BucketConfig {
   maxTokens: number;
-  refillRate: number; // tokens per second
+  refillRate: number;
 }
 
 interface Bucket {
@@ -22,11 +22,12 @@ export class RateLimiter {
       lastRefill: Date.now(),
       config,
     });
+    log.debug(`registered rate limit for ${name}: ${config.maxTokens} tokens, ${config.refillRate}/s`);
   }
 
   async acquire(name: string): Promise<boolean> {
     const bucket = this.buckets.get(name);
-    if (!bucket) return true; // no limit registered
+    if (!bucket) return true;
 
     this.refill(bucket);
 
@@ -35,9 +36,8 @@ export class RateLimiter {
       return true;
     }
 
-    // Calculate wait time for next token
-    const waitMs = (1 / bucket.config.refillRate) * 1000;
-    log.debug(`rate limited on ${name}, waiting ${waitMs}ms`);
+    const waitMs = Math.ceil((1 / bucket.config.refillRate) * 1000);
+    log.debug(`rate limited: ${name}, waiting ${waitMs}ms`);
     await new Promise(resolve => setTimeout(resolve, waitMs));
 
     this.refill(bucket);
@@ -46,6 +46,7 @@ export class RateLimiter {
       return true;
     }
 
+    log.warn(`rate limit exceeded: ${name}`);
     return false;
   }
 
@@ -67,13 +68,13 @@ export class RateLimiter {
   }
 }
 
-// Shared instance
 export const rateLimiter = new RateLimiter();
 
-// Register default limits
+// Default limits per source
 rateLimiter.register('reddit', { maxTokens: 60, refillRate: 1 });
 rateLimiter.register('hackernews', { maxTokens: 30, refillRate: 0.5 });
 rateLimiter.register('github', { maxTokens: 30, refillRate: 0.5 });
 rateLimiter.register('twitter', { maxTokens: 15, refillRate: 0.25 });
 rateLimiter.register('arxiv', { maxTokens: 10, refillRate: 0.2 });
 rateLimiter.register('wikipedia', { maxTokens: 50, refillRate: 1 });
+rateLimiter.register('scholar', { maxTokens: 5, refillRate: 0.1 });
