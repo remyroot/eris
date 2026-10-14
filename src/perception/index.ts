@@ -8,4 +8,5 @@ export { BrowserPerception } from './browser';
 export { DiscordPerception } from './discord';
 export { TwitterPerception } from './twitter';
 export { WikipediaPerception } from './wikipedia';
+export { ScholarPerception } from './scholar';
 export * from './nlp';
