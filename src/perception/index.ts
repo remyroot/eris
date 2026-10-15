@@ -9,4 +9,7 @@ export { DiscordPerception } from './discord';
 export { TwitterPerception } from './twitter';
 export { WikipediaPerception } from './wikipedia';
 export { ScholarPerception } from './scholar';
+export { RssPerception } from './rss';
+export { RateLimiter, rateLimiter } from './ratelimit';
+export { extractFromHtml, ExtractedContent } from './extract';
 export * from './nlp';
